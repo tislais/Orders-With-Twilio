@@ -11,7 +11,7 @@ describe('order routes', () => {
     return setup(pool);
   });
 
-  it('creates an order via POST', async () => {
+  it('creates a new order in our database an sends a text message', async () => {
     const res = await request(app)
       .post('/api/v1/orders')
       .send({ 
