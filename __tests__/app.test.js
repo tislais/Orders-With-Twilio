@@ -3,6 +3,7 @@ import pool from '../lib/utils/pool.js';
 import setup from '../data/setup.js';
 import request from 'supertest';
 import app from '../lib/app.js';
+import Order from '../lib/models/Order.js';
 
 dotenv.config();
 
@@ -22,4 +23,13 @@ describe('order routes', () => {
       quantity: 5
     });
   });
+
+  it('finds an order by id via GET', async () => {
+    const order = await Order.insert({
+      quantity: '15'
+    });
+    const res = await request(app).get(`/api/v1/orders/${order.id}`);
+    expect(res.body).toEqual(order);
+  });
+
 });
