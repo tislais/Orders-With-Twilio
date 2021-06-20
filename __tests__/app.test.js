@@ -33,12 +33,32 @@ describe('order routes', () => {
     expect(res.body).toEqual([orderOne, orderTwo]);
   });
 
-  it('finds an order by id via GET', async () => {
+  it.skip('finds an order by id via GET', async () => {
     const order = await Order.insert({
       quantity: '15'
     });
     const res = await request(app).get(`/api/v1/orders/${order.id}`);
     expect(res.body).toEqual(order);
+  });
+
+  it('updates an order and sends a text', async () => {
+
+    const oldOrder = await Order.insert({
+      quantity: 9
+    });
+
+    const newOrder = {
+      id: 1,
+      quantity: 10
+    };
+    
+    const res = await request(app)
+      .post(`/api/v1/orders/${oldOrder.id}`)
+      .send({
+        quantity: 10
+      });
+    
+    expect(res.body).toEqual(newOrder);
   });
 
 });
