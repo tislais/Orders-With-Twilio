@@ -12,7 +12,7 @@ describe('order routes', () => {
     return setup(pool);
   });
 
-  it.skip('creates a new order in our database and sends a text message', async () => {
+  it('creates a new order in our database and sends a text message', async () => {
     const res = await request(app)
       .post('/api/v1/orders')
       .send({ 
@@ -24,7 +24,7 @@ describe('order routes', () => {
     });
   });
 
-  it.skip('finds all orders via GET', async () => {
+  it('finds all orders via GET', async () => {
 
     const orderOne = await Order.insert({ quantity: 3 });
     const orderTwo = await Order.insert({ quantity: 4 });
@@ -33,7 +33,7 @@ describe('order routes', () => {
     expect(res.body).toEqual([orderOne, orderTwo]);
   });
 
-  it.skip('finds an order by id via GET', async () => {
+  it('finds an order by id via GET', async () => {
     const order = await Order.insert({
       quantity: '15'
     });
@@ -43,9 +43,11 @@ describe('order routes', () => {
 
   it('updates an order and sends a text', async () => {
 
-    const oldOrder = await Order.insert({
+    const order = await Order.insert({
       quantity: 9
     });
+
+    order.quantity = 10;
 
     const newOrder = {
       id: 1,
@@ -53,12 +55,24 @@ describe('order routes', () => {
     };
     
     const res = await request(app)
-      .post(`/api/v1/orders/${oldOrder.id}`)
+      .put(`/api/v1/orders/${order.id}`)
       .send({
         quantity: 10
       });
     
     expect(res.body).toEqual(newOrder);
+  });
+
+  it('it deletes an item from the database and sends a text', async () => {
+    
+    const order = await Order.insert({
+      quantity: 9
+    });
+
+    const res = await request(app)
+      .delete(`/api/v1/orders/${order.id}`);
+    
+    expect(res.body).toEqual(order);
   });
 
   
